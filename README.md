@@ -12,6 +12,10 @@ Construimos uma aplicação do zero para consumir a API do IMDb e exibir os film
 
 Criamos um gerador de figurinhas explorando outras bibliotecas nativas do Java, para que possamos enviar por Whatsapp os nossos filmes preferidos!
 
+## Aula 03
+
+Ligando as pontas, refatoração e orientação a objetos!
+
 ## Instrutores e Instrutoras da Alura nessa imersão
 
 Jacqueline Oliveira

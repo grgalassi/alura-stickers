@@ -1,14 +1,10 @@
 import java.io.InputStream;
-import java.net.URI;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
-import java.util.Map;
 
 import configuration.KeyConfiguration;
+import connection.ClienteHttp;
+import contents.Conteudo;
 import generator.StickerGenerator;
 
 public class App extends KeyConfiguration {
@@ -19,47 +15,31 @@ public class App extends KeyConfiguration {
 
     public static void main(String[] args) throws Exception {
 
-        //String url = "https://imdb-api.com/en/API/Top250Movies/" + getApiKey();
-        String url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
-        URI endereco = URI.create(url);
-        var client = HttpClient.newHttpClient();
-        var request = HttpRequest.newBuilder(endereco).GET().build();
-        HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-        String body = response.body();
+        // String url = "https://imdb-api.com/en/API/Top250Movies/" + getApiKey();
+        // String url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
+        // var extrator = new ExtratorConteudoIMDB();
+        // String url = "https://api.nasa.gov/planetary/apod?api_key=" + getApiKey2();
+        String url = "https://api.mocki.io/v2/549a5d8b/NASA-APOD";
+        var extrator = new ExtratorConteudoNasa();
 
-        var parser = new JsonParser();
-        List<Map<String, String>> listaDeFilmes = parser.parse(body);
-        
+        var http = new ClienteHttp();
+        String json = http.buscaDados(url);
+
+        List<Conteudo> conteudos = extrator.extract(json);
+
         var gerador = new StickerGenerator();
 
-        for (Map<String, String> filme : listaDeFilmes) {
+        for (int i = 0; i < 3; i++) {
 
-            String urlImage = filme.get("image");
-            String titulo = filme.get("title");
-            float rating = Float.parseFloat(filme.get("imDbRating"));
+            var conteudo = conteudos.get(i);
 
-            if(urlImage.contains("@")) {
-                String subUrlImg = urlImage.substring(0, urlImage.lastIndexOf("@") + 1);
-                System.out.println(subUrlImg + ".jpg");
+            InputStream inputStream = new URL(conteudo.getUrlImagem()).openStream();
+            String nomeArquivo = conteudo.getTitulo() + ".png";
 
-                InputStream inputStream = new URL(urlImage).openStream();
-                String nomeArquivo = titulo + ".png";
+            new StickerGenerator();
+            gerador.cria(inputStream, nomeArquivo);
 
-                new StickerGenerator();
-                gerador.cria(inputStream, nomeArquivo, rating);
-
-            }
-            else{
-                InputStream inputStream = new URL(urlImage).openStream();
-                System.out.println(urlImage);
-                String nomeArquivo = titulo + ".png";
-
-                new StickerGenerator();
-                gerador.cria(inputStream, nomeArquivo, rating);
-
-            }
-            
-            System.out.println(RED_BOLD + "Titulo: " + RESET + titulo);
+            System.out.println(RED_BOLD + "Titulo: " + RESET + conteudo.getTitulo());
             System.out.println();
         }
     }

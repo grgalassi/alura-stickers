@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 
 public class StickerGenerator {
 
-    public void cria(InputStream inputStream, String nomeArquivo, Float rating) throws Exception {
+    public void cria(InputStream inputStream, String nomeArquivo) throws Exception {
 
         BufferedImage imagemOriginal = ImageIO.read(inputStream);
 
@@ -25,15 +25,9 @@ public class StickerGenerator {
 
         var font = new Font("Impact", Font.PLAIN, 84);
         graphics.setFont(font);
+        graphics.setColor(Color.YELLOW);
+        graphics.drawString("TOPZERA", 400, novaAltura - 100);
 
-        if (rating > 9) {
-            graphics.setColor(Color.YELLOW);
-            graphics.drawString("NOTA: " + rating, 100, novaAltura - 120);
-
-        } else {
-            graphics.setColor(Color.RED);
-            graphics.drawString("NOTA: " + rating, 100, novaAltura - 120);
-        }
         ImageIO.write(novaImagem, "png", new File("output/" + nomeArquivo));
     }
 
