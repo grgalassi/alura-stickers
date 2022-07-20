@@ -1,4 +1,6 @@
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -6,7 +8,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.List;
 import java.util.Map;
 
-public class App {
+import configuration.KeyConfiguration;
+import generator.StickerGenerator;
+
+public class App extends KeyConfiguration {
 
     public static final String RESET = "\033[0m";
     public static final String WHITE_BOLD = "\033[1;37m";
@@ -14,7 +19,8 @@ public class App {
 
     public static void main(String[] args) throws Exception {
 
-        String url = "https://api.mocki.io/v2/549a5d8b";
+        //String url = "https://imdb-api.com/en/API/Top250Movies/" + getApiKey();
+        String url = "https://api.mocki.io/v2/549a5d8b/Top250Movies";
         URI endereco = URI.create(url);
         var client = HttpClient.newHttpClient();
         var request = HttpRequest.newBuilder(endereco).GET().build();
@@ -23,11 +29,37 @@ public class App {
 
         var parser = new JsonParser();
         List<Map<String, String>> listaDeFilmes = parser.parse(body);
+        
+        var gerador = new StickerGenerator();
 
         for (Map<String, String> filme : listaDeFilmes) {
-            System.out.println(RED_BOLD + "Titulo: " + RESET + filme.get("title"));
-            System.out.println(RED_BOLD + "Capa: " + RESET + filme.get("image"));
-            System.out.println(RED_BOLD + "Classificação: " + RESET + filme.get("imDbRating"));
+
+            String urlImage = filme.get("image");
+            String titulo = filme.get("title");
+            float rating = Float.parseFloat(filme.get("imDbRating"));
+
+            if(urlImage.contains("@")) {
+                String subUrlImg = urlImage.substring(0, urlImage.lastIndexOf("@") + 1);
+                System.out.println(subUrlImg + ".jpg");
+
+                InputStream inputStream = new URL(urlImage).openStream();
+                String nomeArquivo = titulo + ".png";
+
+                new StickerGenerator();
+                gerador.cria(inputStream, nomeArquivo, rating);
+
+            }
+            else{
+                InputStream inputStream = new URL(urlImage).openStream();
+                System.out.println(urlImage);
+                String nomeArquivo = titulo + ".png";
+
+                new StickerGenerator();
+                gerador.cria(inputStream, nomeArquivo, rating);
+
+            }
+            
+            System.out.println(RED_BOLD + "Titulo: " + RESET + titulo);
             System.out.println();
         }
     }
