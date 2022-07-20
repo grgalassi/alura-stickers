@@ -9,15 +9,12 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import configuration.FontImpact;
-
-public class StickerGenerator extends FontImpact {
+public class StickerGenerator {
 
     public void cria(InputStream inputStream, String nomeArquivo, Float rating) throws Exception {
 
-        
         BufferedImage imagemOriginal = ImageIO.read(inputStream);
-        
+
         int largura = imagemOriginal.getWidth();
         int altura = imagemOriginal.getHeight();
         int novaAltura = altura + 200;
@@ -33,12 +30,11 @@ public class StickerGenerator extends FontImpact {
             graphics.setColor(Color.YELLOW);
             graphics.drawString("NOTA: " + rating, 100, novaAltura - 120);
 
-        } 
-        else {
+        } else {
             graphics.setColor(Color.RED);
             graphics.drawString("NOTA: " + rating, 100, novaAltura - 120);
         }
-            ImageIO.write(novaImagem, "png", new File("output/" + nomeArquivo));
-        }
-
+        ImageIO.write(novaImagem, "png", new File("output/" + nomeArquivo));
     }
+
+}
