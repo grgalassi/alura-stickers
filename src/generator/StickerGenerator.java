@@ -17,16 +17,16 @@ public class StickerGenerator {
 
         int largura = imagemOriginal.getWidth();
         int altura = imagemOriginal.getHeight();
-        int novaAltura = altura + 200;
+        int novaAltura = altura + 100;
         BufferedImage novaImagem = new BufferedImage(largura, novaAltura, BufferedImage.TRANSLUCENT);
 
         Graphics2D graphics = (Graphics2D) novaImagem.getGraphics();
         graphics.drawImage(imagemOriginal, 0, 0, null);
 
-        var font = new Font("Impact", Font.PLAIN, 84);
+        var font = new Font("Impact", Font.PLAIN, 60);
         graphics.setFont(font);
         graphics.setColor(Color.YELLOW);
-        graphics.drawString("TOPZERA", 400, novaAltura - 100);
+        graphics.drawString("TOPZEIRA", 20, novaAltura - 50);
 
         ImageIO.write(novaImagem, "png", new File("output/" + nomeArquivo));
     }

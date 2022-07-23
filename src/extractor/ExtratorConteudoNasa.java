@@ -1,3 +1,4 @@
+package extractor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -5,7 +6,7 @@ import java.util.Map;
 
 import contents.Conteudo;
 
-public class ExtratorConteudoIMDB implements ExtratorConteudo {
+public class ExtratorConteudoNasa implements ExtratorConteudo {
 
     public List<Conteudo> extract(String json) {
 
@@ -16,8 +17,7 @@ public class ExtratorConteudoIMDB implements ExtratorConteudo {
 
         for (Map<String, String> atributos : listaDeAtributos) {
             String titulo = atributos.get("title");
-            String urlImage = atributos.get("image")
-                    .replaceAll("(@+)(.*).jpg$", "$1.jpg");
+            String urlImage = atributos.get("url");
             var conteudo = new Conteudo(titulo, urlImage);
 
             conteudos.add(conteudo);
